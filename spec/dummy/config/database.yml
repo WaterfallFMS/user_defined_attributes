@@ -1,0 +1,19 @@
+
+base: &base
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  username: waterfall
+  password: blueh20
+
+development:
+  <<: *base
+  database: dummy_development
+
+test:
+  <<: *base
+  database: dummy_test
+
+production:
+  <<: *base
+  database: dummy_production
