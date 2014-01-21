@@ -6,6 +6,7 @@ class CreateUserDefinedTypes < ActiveRecord::Migration
       t.string   "data_type",                     :null => false
       t.boolean  "required",   :default => false, :null => false
       t.boolean  "public",     :default => false, :null => false
+      t.integer    :tenant_id
 
       t.timestamps
     end

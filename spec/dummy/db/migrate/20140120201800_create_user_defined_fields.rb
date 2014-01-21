@@ -5,6 +5,7 @@ class CreateUserDefinedFields < ActiveRecord::Migration
       t.belongs_to :model, :polymorphic => true
       t.text       :value
       t.string     :model_type
+      t.integer    :tenant_id
 
       t.timestamps
     end
