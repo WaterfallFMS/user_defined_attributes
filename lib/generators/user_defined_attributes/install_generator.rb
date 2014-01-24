@@ -10,8 +10,8 @@ module UserDefinedAttributes
 
     desc 'Generates migrations.'
     def create_migration_file
-      migration_template 'create_user_defined_fields.rb', 'db/migrate/create_user_defined_fields.rb'
-      migration_template 'create_user_defined_types.rb', 'db/migrate/create_user_defined_types.rb'
+      migration_template 'create_user_defined_attributes_fields.rb', 'db/migrate/create_user_defined_attributes_fields.rb'
+      migration_template 'create_user_defined_attributes_field_types.rb', 'db/migrate/create_user_defined_attributes_field_types.rb'
     end
 
     def self.next_migration_number(dirname)
