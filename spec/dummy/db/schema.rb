@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140121191932) do
+ActiveRecord::Schema.define(version: 20140124215151) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,5 +21,31 @@ ActiveRecord::Schema.define(version: 20140121191932) do
     t.string  "name"
     t.string  "email"
   end
+
+  create_table "user_defined_attributes_field_types", force: true do |t|
+    t.integer  "tenant_id"
+    t.string   "name",                       null: false
+    t.string   "model_type",                 null: false
+    t.string   "data_type",                  null: false
+    t.boolean  "required",   default: false, null: false
+    t.boolean  "public",     default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_defined_attributes_field_types", ["name", "model_type", "tenant_id"], name: "udaft_unique", unique: true, using: :btree
+
+  create_table "user_defined_attributes_fields", force: true do |t|
+    t.integer  "tenant_id"
+    t.integer  "user_defined_type_id"
+    t.integer  "model_id"
+    t.string   "model_type"
+    t.text     "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_defined_attributes_fields", ["model_type", "model_id", "tenant_id"], name: "udaf_model", using: :btree
+  add_index "user_defined_attributes_fields", ["user_defined_type_id", "model_type", "tenant_id"], name: "udaf_unique", unique: true, using: :btree
 
 end
