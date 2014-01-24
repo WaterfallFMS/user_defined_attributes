@@ -1,5 +1,6 @@
 require 'rubygems'
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
+require 'factories/leads'
 
 RSpec.configure do |config|
   config.filter_run :focus => true
