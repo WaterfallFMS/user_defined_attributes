@@ -2,6 +2,8 @@ require 'rubygems'
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require 'database_cleaner'
 require 'factories/leads'
+require 'factories/user_defined_attribute_factory'
+require 'user_defined_attributes'
 
 RSpec.configure do |config|
   config.filter_run :focus => true
