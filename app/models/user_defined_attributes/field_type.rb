@@ -1,5 +1,5 @@
   class UserDefinedAttributes::FieldType < ActiveRecord::Base
-    has_many :user_defined_fields, :dependent => :destroy
+    has_many :fields, :dependent => :destroy
 
     #scope :default_sort, order('lower(name)')
 

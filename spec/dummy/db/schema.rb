@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140124215151) do
+ActiveRecord::Schema.define(version: 20140129200531) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 20140124215151) do
 
   create_table "user_defined_attributes_fields", force: true do |t|
     t.integer  "tenant_id"
-    t.integer  "user_defined_type_id"
+    t.integer  "field_type_id"
     t.integer  "model_id"
     t.string   "model_type"
     t.text     "value"
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20140124215151) do
     t.datetime "updated_at"
   end
 
+  add_index "user_defined_attributes_fields", ["field_type_id", "model_type", "tenant_id"], name: "udaf_unique", unique: true, using: :btree
   add_index "user_defined_attributes_fields", ["model_type", "model_id", "tenant_id"], name: "udaf_model", using: :btree
-  add_index "user_defined_attributes_fields", ["user_defined_type_id", "model_type", "tenant_id"], name: "udaf_unique", unique: true, using: :btree
 
 end
