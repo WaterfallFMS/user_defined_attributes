@@ -46,13 +46,13 @@ module UDA
 
 
   module ClassMethods
-    def user_defined_types
+    def field_types
       UserDefinedAttributes::FieldType.where(:model_type => self)
     end
   end
 
-  def user_defined_types
-    self.class.user_defined_types
+  def field_types
+    self.class.field_types
   end
 
   def fields
@@ -60,12 +60,12 @@ module UDA
 
     ids    = {}
     fields = {}
-    user_defined_types.each do |type|
+    field_types.each do |type|
       fields[type.name] = Attribute.new type
       ids[type.id]      = type.name
     end
     user_defined_fields.each do |field|
-      fields[ids[field.user_defined_type_id]].value = field.value
+      fields[ids[field.field_type_id]].value = field.value
     end
     @fields=fields
   end
@@ -87,13 +87,13 @@ module UDA
 
     # we need to remain a hash of Attribute
     @fields = {}
-    user_defined_types.each do |type|
+    field_types.each do |type|
       @fields[type.name] = Attribute.new type, args[type.name]
     end
   end
 
   def check_fields
-    user_defined_types.each do |type|
+    field_types.each do |type|
       self.errors.add_on_blank(type.name) if type.required?
     end
   end
@@ -109,11 +109,11 @@ module UDA
     return unless @fields
 
     user_defined_fields.destroy_all
-    user_defined_types.each do |type|
+    field_types.each do |type|
       value = @fields[type.name]
       next if value.blank?
 
-      UserDefinedField.create :user_defined_type => type, :model => self, :value => value.to_s
+      UserDefinedAttributes::Field.create :field_type => type, :model => self, :value => value.to_s
     end
   end
 
