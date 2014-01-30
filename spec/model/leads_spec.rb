@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Lead do
-  let(:subject) {Lead.new}
+  let(:subject) {create :lead}
   before do
     @type = create :user_defined_field_type, :model_type => Lead.to_s
   end
@@ -31,14 +31,13 @@ describe Lead do
 
     it 'should include the user defined field values' do
       type2 = create :user_defined_field_type, :model_type => Lead.to_s
-      subject.save
 
       field1 = create :user_defined_field, :field_type => @type, :model => subject
       field2 = create :user_defined_field, :field_type => type2, :model => subject
 
-
-      subject.fields[@type.name].should == field1.value
-      subject.fields[type2.name].should == field2.value
+      new_subject = Lead.find(subject)
+      new_subject.fields[@type.name].should == field1.value
+      new_subject.fields[type2.name].should == field2.value
     end
   end
 
@@ -58,11 +57,11 @@ describe Lead do
 
     it 'should stringify values' do
       @type.name = 'first'; @type.public = true; @type.save
-      subject.save
       field = create :user_defined_field, :field_type => @type, :model => subject
 
-      subject.public_fields[@type.name].should be_a String
-      subject.public_fields[@type.name].should == field.value
+      new_subject = Lead.find(subject)
+      new_subject.public_fields[@type.name].should be_a String
+      new_subject.public_fields[@type.name].should == field.value
     end
 
     context 'keys' do
@@ -102,12 +101,12 @@ describe Lead do
 
   context 'on delete' do
     it 'should clean up its user defined fields' do
-      subject.save
       create :user_defined_field, :field_type => @type, :model => subject
 
+      new_subject = Lead.find(subject)
       UserDefinedAttributes::Field.count.should == 1
       expect {
-        subject.destroy
+        new_subject.destroy
       }.to change(UserDefinedAttributes::Field, :count).by(-1)
     end
   end
@@ -126,25 +125,26 @@ describe Lead do
 
     it 'should ensure set fields are valid' do
       create :user_defined_field, :field_type => @type, :model => subject
-      subject.valid?.should be_true
+      new_subject = Lead.find(subject)
+      new_subject.valid?.should be_true
 
-      subject.fields = {}
-      subject.valid?.should be_false
-      subject.errors[@type.name].should include "can't be blank"
+      new_subject.fields = {}
+      new_subject.valid?.should be_false
+      new_subject.errors[@type.name].should include "can't be blank"
     end
   end
 
   context 'after save' do
     before do
-      subject.save
       create :user_defined_field, :field_type => @type, :model => subject
     end
 
     it 'should clean up user defined fields' do
       UserDefinedAttributes::Field.count.should == 1
 
-      subject.fields = {}
-      subject.save
+      new_subject = Lead.find(subject)
+      new_subject.fields = {}
+      new_subject.save
 
       UserDefinedAttributes::Field.count.should == 0
     end
@@ -152,13 +152,14 @@ describe Lead do
     it 'should update any changed values' do
       type2 = create :user_defined_field_type, :model_type => Lead.to_s
 
-      subject.fields = {type2.name => 'new value'}
-      subject.save
+      new_subject = Lead.find(subject)
+      new_subject.fields = {type2.name => 'new value'}
+      new_subject.save
 
       UserDefinedAttributes::Field.count.should == 1
       udf = UserDefinedAttributes::Field.first
       udf.model.should             == subject
-      udf.user_defined_field_type.should == type2
+      udf.field_type.should == type2
       udf.value.should             == 'new value'
     end
 
