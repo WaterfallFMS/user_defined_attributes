@@ -29,7 +29,7 @@ describe Lead do
       subject.fields.should have_key type2.name
     end
 
-    it 'should include the user defined field values', focus: true do
+    it 'should include the user defined field values' do
       type2 = create :user_defined_field_type, :model_type => Lead.to_s
       subject.save
 
@@ -59,7 +59,7 @@ describe Lead do
     it 'should stringify values' do
       @type.name = 'first'; @type.public = true; @type.save
       subject.save
-      field = create :user_defined_field, :user_defined_field_type => @type, :model => subject
+      field = create :user_defined_field, :field_type => @type, :model => subject
 
       subject.public_fields[@type.name].should be_a String
       subject.public_fields[@type.name].should == field.value
@@ -103,12 +103,12 @@ describe Lead do
   context 'on delete' do
     it 'should clean up its user defined fields' do
       subject.save
-      create :user_defined_field, :user_defined_field_type => @type, :model => subject
+      create :user_defined_field, :field_type => @type, :model => subject
 
-      UserDefinedField.count.should == 1
+      UserDefinedAttributes::Field.count.should == 1
       expect {
         subject.destroy
-      }.to change(UserDefinedField, :count).by(-1)
+      }.to change(UserDefinedAttributes::Field, :count).by(-1)
     end
   end
 
@@ -125,7 +125,7 @@ describe Lead do
     end
 
     it 'should ensure set fields are valid' do
-      create :user_defined_field, :user_defined_field_type => @type, :model => subject
+      create :user_defined_field, :field_type => @type, :model => subject
       subject.valid?.should be_true
 
       subject.fields = {}
@@ -137,16 +137,16 @@ describe Lead do
   context 'after save' do
     before do
       subject.save
-      create :user_defined_field, :user_defined_field_type => @type, :model => subject
+      create :user_defined_field, :field_type => @type, :model => subject
     end
 
     it 'should clean up user defined fields' do
-      UserDefinedField.count.should == 1
+      UserDefinedAttributes::Field.count.should == 1
 
       subject.fields = {}
       subject.save
 
-      UserDefinedField.count.should == 0
+      UserDefinedAttributes::Field.count.should == 0
     end
 
     it 'should update any changed values' do
@@ -155,8 +155,8 @@ describe Lead do
       subject.fields = {type2.name => 'new value'}
       subject.save
 
-      UserDefinedField.count.should == 1
-      udf = UserDefinedField.first
+      UserDefinedAttributes::Field.count.should == 1
+      udf = UserDefinedAttributes::Field.first
       udf.model.should             == subject
       udf.user_defined_field_type.should == type2
       udf.value.should             == 'new value'
