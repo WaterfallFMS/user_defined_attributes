@@ -1,7 +1,7 @@
   class UserDefinedAttributes::FieldType < ActiveRecord::Base
     has_many :fields, :dependent => :destroy
 
-    #scope :default_sort, order('lower(name)')
+    default_scope { where(tenant_id: @current_tenant) }
 
     validates :name,       :presence => true, :uniqueness => {:scope => :model_type}
     validates :model_type, :presence => true

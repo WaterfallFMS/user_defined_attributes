@@ -12,6 +12,10 @@ RSpec.configure do |config|
   config.before(:each) do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.start
+
+    unless example.metadata[:skip_tenant]
+      @current_tenant = 1
+    end
   end
 
   config.after(:each) do
