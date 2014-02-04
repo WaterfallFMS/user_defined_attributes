@@ -2,6 +2,7 @@ require 'rubygems'
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require 'database_cleaner'
 require 'factories/leads'
+require 'factories/tenants'
 require 'factories/user_defined_attribute_factory'
 require 'user_defined_attributes'
 
@@ -14,7 +15,8 @@ RSpec.configure do |config|
     DatabaseCleaner.start
 
     unless example.metadata[:skip_tenant]
-      @current_tenant = 1
+      @global_tenant    = create(:tenant)
+      Tenant.current_id = @global_tenant.id
     end
   end
 
