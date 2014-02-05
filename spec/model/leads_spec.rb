@@ -14,19 +14,19 @@ describe Lead do
 
   it 'should whitelist the fields attribute' do
     subject.update_attributes :fields => {@type.name => 'foo'}
-    subject.fields[@type.name].should == 'foo'
+    expect(subject.fields[@type.name]).to eq 'foo'
   end
 
   context '.fields' do
     it 'should return a Hash' do
-      subject.fields.should be_a Hash
+      expect(subject.fields).to be_a Hash
     end
 
     it 'should include all user defined types' do
       type2 = create :user_defined_field_type, :model_type => Lead.to_s
 
-      subject.fields.should have_key @type.name
-      subject.fields.should have_key type2.name
+      expect(subject.fields).to have_key @type.name
+      expect(subject.fields).to have_key type2.name
     end
 
     it 'should include the user defined field values' do
@@ -36,8 +36,8 @@ describe Lead do
       field2 = create :user_defined_field, :field_type => type2, :model => subject
 
       new_subject = Lead.find(subject)
-      new_subject.fields[@type.name].should == field1.value
-      new_subject.fields[type2.name].should == field2.value
+      expect(new_subject.fields[@type.name]).to eq field1.value
+      expect(new_subject.fields[type2.name]).to eq field2.value
     end
   end
 
@@ -51,8 +51,8 @@ describe Lead do
       @type.name = 'first'; @type.save
       type2 = create :user_defined_field_type, :name => 'second', :model_type => Lead.to_s, :public => true
 
-      subject.public_fields.should include type2.name
-      subject.public_fields.should_not include @type.name
+      expect(subject.public_fields).to include type2.name
+      expect(subject.public_fields).to_not include @type.name
     end
 
     it 'should stringify values' do
@@ -60,8 +60,8 @@ describe Lead do
       field = create :user_defined_field, :field_type => @type, :model => subject
 
       new_subject = Lead.find(subject)
-      new_subject.public_fields[@type.name].should be_a String
-      new_subject.public_fields[@type.name].should == field.value
+      expect(new_subject.public_fields[@type.name]).to be_a String
+      expect(new_subject.public_fields[@type.name]).to eq field.value
     end
 
     context 'keys' do
@@ -71,16 +71,16 @@ describe Lead do
         @type.name = 'with spaces'
         @type.save
 
-        subject.public_fields.should include 'with_spaces'
-        subject.public_fields.should_not include 'with spaces'
+        expect(subject.public_fields).to include 'with_spaces'
+        expect(subject.public_fields).to_not include 'with spaces'
       end
 
       it 'should have only alphanumerical characters' do
         @type.name = "1good!@\#$%^&*()-=[]{}\\|:;'\",<.>/? value"
         @type.save
 
-        subject.public_fields.should_not include @type.name
-        subject.public_fields.should include '1good_value'
+        expect(subject.public_fields).to_not include @type.name
+        expect(subject.public_fields).to include '1good_value'
       end
     end
   end
@@ -104,7 +104,7 @@ describe Lead do
       create :user_defined_field, :field_type => @type, :model => subject
 
       new_subject = Lead.find(subject)
-      UserDefinedAttributes::Field.count.should == 1
+      expect(UserDefinedAttributes::Field.count).to eq 1
       expect {
         new_subject.destroy
       }.to change(UserDefinedAttributes::Field, :count).by(-1)
@@ -119,18 +119,18 @@ describe Lead do
     end
 
     it 'tests existing values in the database' do
-      subject.valid?.should be_false
-      subject.errors[@type.name].should include "can't be blank"
+      expect(subject.valid?).to be_false
+      expect(subject.errors[@type.name]).to include "can't be blank"
     end
 
     it 'should ensure set fields are valid' do
       create :user_defined_field, :field_type => @type, :model => subject
       new_subject = Lead.find(subject)
-      new_subject.valid?.should be_true
+      expect(new_subject.valid?).to be_true
 
       new_subject.fields = {}
-      new_subject.valid?.should be_false
-      new_subject.errors[@type.name].should include "can't be blank"
+      expect(new_subject.valid?).to be_false
+      expect(new_subject.errors[@type.name]).to include "can't be blank"
     end
   end
 
@@ -140,13 +140,13 @@ describe Lead do
     end
 
     it 'should clean up user defined fields' do
-      UserDefinedAttributes::Field.count.should == 1
+      expect(UserDefinedAttributes::Field.count).to eq 1
 
       new_subject = Lead.find(subject)
       new_subject.fields = {}
       new_subject.save
 
-      UserDefinedAttributes::Field.count.should == 0
+      expect(UserDefinedAttributes::Field.count).to eq 0
     end
 
     it 'should update any changed values' do
@@ -156,11 +156,11 @@ describe Lead do
       new_subject.fields = {type2.name => 'new value'}
       new_subject.save
 
-      UserDefinedAttributes::Field.count.should == 1
+      expect(UserDefinedAttributes::Field.count).to eq 1
       udf = UserDefinedAttributes::Field.first
-      udf.model.should             == subject
-      udf.field_type.should == type2
-      udf.value.should             == 'new value'
+      expect(udf.model).to      eq subject
+      expect(udf.field_type).to eq type2
+      expect(udf.value).to      eq 'new value'
     end
 
     it 'should not be called if fields are not set' do
