@@ -1,6 +1,6 @@
 module UserDefinedAttributes
   class UserDefinedTypesController < ApplicationController
-    load_and_authorize_resource
+    #load_and_authorize_resource
     before_filter :clean_params, :only => [:create,:update]
 
     def index
