@@ -16,6 +16,7 @@ module UDA
       @type      = uda.data_type
       @required  = uda.required?
       @public    = uda.public?
+      @hidden    = uda.hidden?
       self.value = value
     end
 
@@ -34,6 +35,9 @@ module UDA
     end
     def public?
       @public
+    end
+    def hidden?
+      @hidden
     end
 
     def ==(other)

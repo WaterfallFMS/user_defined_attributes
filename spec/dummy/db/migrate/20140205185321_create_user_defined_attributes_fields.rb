@@ -10,8 +10,12 @@ class CreateUserDefinedAttributesFields < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :user_defined_attributes_fields, [:model_type, :model_id, :tenant_id], :name => 'udaf_model'
-    add_index :user_defined_attributes_fields, [:field_type_id, :model_type, :tenant_id], :unique => true,
-              :name => 'udaf_unique'
+    add_index :user_defined_attributes_fields,
+              [:model_type, :model_id, :tenant_id],
+              name: 'udaf_model'
+    add_index :user_defined_attributes_fields,
+              [:field_type_id, :model_type, :tenant_id],
+              unique: true,
+              name: 'udaf_unique'
   end
 end
