@@ -1,28 +1,20 @@
+# Fake a Tenant model
 class Tenant
-  def initialize
-    #self.uuid ||= UUID.generate
-  end
+  include TenantContainer
 
-  def uuid
-    @uuid
-  end
-  alias_method :id, :uuid
-  #alias_method :current_id, :uuid
+  attr_accessor :name, :uuid
 
-  def uuid=(uuid)
-    @uuid = uuid
-  end
-  alias_method :self.current_id= , :uuid=
-
-  def name
-    @name
-  end
-
-  def name=(name)
-    @name = name
+  def id
+    @id ||= next_id
   end
 
   def save!
     true
+  end
+
+  private
+  def next_id
+    count = Thread.current[:tenant_count] ||= 0
+    Thread.current[:tenant_count] = count
   end
 end
