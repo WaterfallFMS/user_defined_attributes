@@ -124,7 +124,7 @@ The controllers and views will send messages to enforce permissions.
 
 Controllers will send:
 
-1. `policy_scope(class)` - returns a finder or array of the class objects that are scoped to the user.
+1. `policy_scope(class)` - returns an finder class objects that are scoped to the user.
 1. `authorize(object,action=nil)` - expected to raise an error if the action is not allowed on the object.  The authorize object should pull the action from the param if not provided.
 
 ```ruby

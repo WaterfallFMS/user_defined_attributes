@@ -3,8 +3,7 @@ module UserDefinedAttributes
     before_action :clean_data_type, only: [:create, :update]
 
     def index
-      @field_types = FieldType.sorted
-      authorize @field_types
+      @field_types = policy_scope(FieldType).sorted
     end
 
     def new

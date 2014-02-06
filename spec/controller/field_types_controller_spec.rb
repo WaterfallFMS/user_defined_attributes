@@ -10,6 +10,11 @@ describe UserDefinedAttributes::FieldTypesController, type: :controller do
       @auth_object = object
       @auth_action = action || (params[:action].to_s + '?')
     end
+
+    def policy_scope(object)
+      # some random restriction
+      object.limit(4)
+    end
   end
 
   describe "GET index" do
@@ -25,10 +30,13 @@ describe UserDefinedAttributes::FieldTypesController, type: :controller do
       expect(local).to eq objects.reverse
     end
 
-    it 'should authorize action' do
+    it 'should request allowed items' do
+      create_list :user_defined_field_type, 6
+
       get :index
-      expect(controller.auth_object).not_to be_nil
-      expect(controller.auth_action).to eq 'index?'
+      local = assigns(:field_types)
+      expect(local.size).to eq 4
+      expect(local).to be_an ActiveRecord::Relation
     end
   end
 
