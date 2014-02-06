@@ -1,0 +1,21 @@
+<%= link_to 'Create new type', new_field_type_path %>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Model type</th>
+    <th>Data type</th>
+    <th>Actions</th>
+  </tr>
+  <% @field_types.each do |type| %>
+    <tr>
+      <td><%= type.name %></td>
+      <td><%= type.model_type %></td>
+      <td><%= type.data_type %></td>
+      <td>
+        <%= link_to 'Edit', edit_field_type_path(type) if can? :update?, type %> |
+        <%= link_to 'Delete', field_type_path(type), method: :delete if can? :destroy?, type %>
+      </td>
+    </tr>
+  <% end %>
+</table>

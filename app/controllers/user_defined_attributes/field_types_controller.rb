@@ -1,5 +1,7 @@
 module UserDefinedAttributes
   class FieldTypesController < ::ApplicationController
+    before_action :new_type,        only: [:new, :create]
+    before_action :find_type,       only: [:edit, :update]
     before_action :clean_data_type, only: [:create, :update]
 
     def index
@@ -44,6 +46,17 @@ module UserDefinedAttributes
     private
     def field_type_params
       params.require(:field_type).permit(:tenant_id, :name, :model_type, :data_type, :required, :public, :hidden)
+    end
+
+    def new_type
+      @field_type = FieldType.new
+      @field_type.assign_attributes field_type_params if params[:action] == 'create'
+      authorize @field_type
+    end
+
+    def find_type
+      @field_type = FieldType.find(params[:id])
+      authorize @field_type
     end
 
     def clean_data_type
