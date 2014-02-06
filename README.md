@@ -24,7 +24,7 @@ To use UDA, first you need to mix-in UDA into a model
 ```ruby
 class User < ActiveRecord::Base
   include MultiTenantModel # require `tenant_id` and `belongs_to :tenant`
-  include UDA
+  include UserDefinedAttributes::Model
 end
 ```
 
