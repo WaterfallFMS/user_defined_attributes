@@ -86,7 +86,7 @@ For the controllers and views we expect `current_tenant` to return the `Tenant` 
 ```ruby
 class ApplicationController < ActionController::Base
   before_filter :set_tenant
-  helper        :current_tenant
+  helper_method :current_tenant
 
   private
   def set_tenant
@@ -122,34 +122,50 @@ $ User.first.tenant #=> <Tenant @id=1>
 
 The controllers and views will send messages to enforce permissions.
 
-For the controller, `authorize(object,action=nil)`, is expected to raise an error if the action is not allowed on the object.  `action` must end with '?' or default to `params[:action]`.
+Controllers will send:
+
+1. `policy_scope(class)` - returns a finder or array of the class objects that are scoped to the user.
+1. `authorize(object,action=nil)` - expected to raise an error if the action is not allowed on the object.  The authorize object should pull the action from the param if not provided.
 
 ```ruby
 class ApplicationController
-  private
-  def authorize(object,action=nil)
-    action = params[:action].to_s + '?'
-
-    unless Policy.find(object).public_send(action)
-      raise 'You cannot do this'
-    end
-  end
-end
-
-class UsersController < ApplicationController
   before_filter do
     # always check for tenant access
     authorize Tenant, :show?
   end
 
+  private
+  def authorize(object, action=nil)
+    action ||= params[:action].to_s + '?'
+
+    # delegate checking to the policy object
+    unless Policy.find(object).public_send(action)
+      raise 'You cannot do this'
+    end
+  end
+
+  def policy_scope(object)
+    # delegate scoping to the object itself
+    object.for_user current_user
+  end
+end
+
+class FieldTypesController < ::ApplicationController
   def index
-    # check if user can :index? User
-    authorize User
+    @field_types = policy_scope(FieldType)
+  end
+
+  def create
+    @field_type = FieldType.new ...
+    authorize @field_type
   end
 end
 ```
 
-Views use the `can?(action, object)` and `can_set?(attribute, object)` messages.  `can?` returns if the user can perform an action on the object.  Unlike `authorize` the action **should not** have '?' appended.  `can_set?` does the same for attributes of the object.
+Views will send:
+
+1. `can?(action, object)` - returns true if the user can perform an action on the object.  Unlike `authorize` the action **should not** have '?' appended.
+1. `can_set?(attribute, object)` - does the same for attributes of the object.
 
 ```erb
 <%= link_to 'Edit User', edit_users_path(@user) if can? :update, @user %>
