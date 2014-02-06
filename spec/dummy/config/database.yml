@@ -3,8 +3,8 @@ base: &base
   adapter: postgresql
   encoding: unicode
   pool: 5
-  username: waterfall
-  password: blueh20
+  username: <%= ENV['TDDIUM_DB_USER'] || 'waterfall' %>
+  password: <%= ENV['TDDIUM_DB_PASSWORD'] || 'blueh20' %>
 
 development:
   <<: *base
@@ -12,7 +12,7 @@ development:
 
 test:
   <<: *base
-  database: dummy_test
+  database: <%= ENV['TDDIUM_DB_NAME'] || 'dummy_test' %>
 
 production:
   <<: *base
