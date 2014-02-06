@@ -1,0 +1,6 @@
+<% object.fields.each do |key,value| %>
+    <% next if value.hidden? %>
+  <p>
+    <b><%= key %>:</b> <%= value %>
+  </p>
+<% end %>

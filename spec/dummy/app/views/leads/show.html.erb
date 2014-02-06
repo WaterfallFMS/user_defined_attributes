@@ -1,0 +1,7 @@
+<h1><%= @lead.name %></h1>
+
+<%= link_to 'Edit', edit_lead_path(@lead) %>
+
+<div>
+  <%= render_uda_fields_for @lead %>
+</div>

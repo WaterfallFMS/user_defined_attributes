@@ -53,6 +53,12 @@ module UDA
     def field_types
       UserDefinedAttributes::FieldType.where(:model_type => self)
     end
+
+    def uda_strong_params
+      {
+          fields: field_types.collect {|type| type.name }
+      }
+    end
   end
 
   def field_types
