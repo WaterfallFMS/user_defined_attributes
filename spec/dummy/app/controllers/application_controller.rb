@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_tenant
-    @tenant = Tenant.new.save
+    @tenant = Tenant.current_tenant
   end
 
   def current_user
