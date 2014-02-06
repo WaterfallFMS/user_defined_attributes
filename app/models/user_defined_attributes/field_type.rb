@@ -6,4 +6,6 @@
     validates :name,       :presence => true, :uniqueness => {:scope => [:tenant_id, :model_type]}
     validates :model_type, :presence => true
     validates :data_type,  :presence => true
+
+    scope :sorted, lambda { order(:model_type).order('lower(name)') }
   end

@@ -4,6 +4,10 @@ class Tenant
 
   attr_accessor :name, :uuid
 
+  def initialize
+    id
+  end
+
   def id
     @id ||= next_id
   end
@@ -11,6 +15,7 @@ class Tenant
   def save!
     true
   end
+  alias_method :save, :save!
 
   private
   def next_id
