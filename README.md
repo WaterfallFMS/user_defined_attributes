@@ -40,7 +40,7 @@ Then you need to make the UDA helpers accessible to your views
 
 ```ruby users_controller.rb
 class UsersController < ActionController::Base
-  helper UserDefinedAttributes::UdaHelper
+  helper 'user_defined_attributes/uda'
 end
 ```
 
@@ -49,20 +49,51 @@ Then you need to add UDA to your form
 ```ruby users/_form.html.erb
 <%= form_for @user do |f| %>
 
-  <%= uda_fields(f) %>
+  <%= render_uda_in_form f %>
 
 <% end %>
 ```
 
-Finally you need to provide the path to the UDA types path so that UDA types can be added to the system
+And add UDA to the show page
 
-```ruby settings/index.html.erb
-<%= link_to 'Manage User Defined Types', user_defined_types_path %>
+```ruby users/show.html.erb
+<div>
+  <%= render_uda_fields_for @user %>
+</div>
 ```
 
-## Multitenacy
+Finally you need to provide the path to the UDA types controller so that UDA types can be added to the system
 
-UDA will only work if there is a tenant.  We assume there is a class which responds to `id`, which we acquire through message passing.
+```ruby settings/index.html.erb
+<%= link_to 'Manage User Defined Types', uda.field_types_path %>
+```
+
+## Strong parameters
+
+In order to get a controller to accept the UDA fields you need to add them to the strong params list.  You can
+use `uda_strong_params` which is mixed into the model.
+
+```
+def lead_params
+  params.require(:lead).permit(:name, Lead.uda_strong_params)
+end
+```
+
+It simply returns a hash `{field: [:array, :of, :uda, :type, :names]}`.  So you can fix in complex items via `merge`.
+
+```
+def lead_params
+  params.require(:lead).permit(:name, :email, :other, Lead.uda_strong_params.merge(nested: :item))
+end
+```
+
+
+## Assumptions
+
+### Multitenacy
+
+UDA will only work if there is a tenant.  We assume there is a class which respond to `current_tenant` returning an
+ instance.  We assume the instances responds to `id`.
 
 ```ruby
 class Tenant < ActiveRecord::Base
@@ -118,7 +149,7 @@ $ User.create       #=> <User @id=1, @tenant_id=1>
 $ User.first.tenant #=> <Tenant @id=1>
 ```
 
-## Policy enforcement
+### Policy enforcement
 
 The controllers and views will send messages to enforce permissions.
 
