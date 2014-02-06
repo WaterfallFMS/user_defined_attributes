@@ -24,7 +24,7 @@ module UDA
       @value
     end
     def inspect
-      %Q(<#{self.class.name} @name="#{name}" @type="#{type}" @require="#{required?}" @value="#{value}">)
+      %Q(<#{self.class.name} @name="#{name}" @type="#{type}" @value="#{value}" @require="#{required?}" @public="#{public?}" @hidden="#{hidden?}">)
     end
 
     def required?
