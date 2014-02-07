@@ -1,12 +1,10 @@
 # UserDefinedAttributes
 
-TODO: Write a gem description
-
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'user_defined_attributes'
+    gem 'user_defined_attributes', github: 'WaterfallFMS/user_defined_attributes'
 
 And then execute:
 
