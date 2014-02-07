@@ -28,7 +28,8 @@ end
 
 Then you need to mount the UDA routes
 
-```ruby routes.rb
+```ruby
+# routes.rb
 Dummy::Application.routes.draw do
   mount UserDefinedAttributes::Engine, at: "uda"
 end
@@ -36,7 +37,8 @@ end
 
 Then you need to make the UDA helpers accessible to your views
 
-```ruby users_controller.rb
+```ruby
+# users_controller.rb
 class UsersController < ActionController::Base
   helper 'user_defined_attributes/uda'
 end
@@ -44,7 +46,8 @@ end
 
 Then you need to add UDA to your form
 
-```ruby users/_form.html.erb
+```ruby
+# users/_form.html.erb
 <%= form_for @user do |f| %>
 
   <%= render_uda_in_form f %>
@@ -54,7 +57,8 @@ Then you need to add UDA to your form
 
 And add UDA to the show page
 
-```ruby users/show.html.erb
+```erb
+<!-- users/show.html.erb -->
 <div>
   <%= render_uda_fields_for @user %>
 </div>
@@ -62,7 +66,8 @@ And add UDA to the show page
 
 Finally you need to provide the path to the UDA types controller so that UDA types can be added to the system
 
-```ruby settings/index.html.erb
+```erb
+<!-- settings/index.html.erb -->
 <%= link_to 'Manage User Defined Types', uda.field_types_path %>
 ```
 
@@ -72,6 +77,7 @@ In order to get a controller to accept the UDA fields you need to add them to th
 use `uda_strong_params` which is mixed into the model.
 
 ```
+# leads_controller.rb
 def lead_params
   params.require(:lead).permit(:name, Lead.uda_strong_params)
 end
@@ -128,13 +134,15 @@ class ApplicationController < ActionController::Base
 end
 ```
 
-```erb users/show.html.erb
+```erb
+<!-- users/show.html.erb -->
 <%= current_tenant.name %>
 ```
 
 For models we expect a belongs to relationship with tenant, which will add a `tenant` message.
 
-```ruby user.rb
+```ruby
+# user.rb
 class User < ActiveRecord::Base
   default_scope { where tenant_id: Tenant.current_id }
   belongs_to :tenant
