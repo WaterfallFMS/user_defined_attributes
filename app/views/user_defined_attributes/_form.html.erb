@@ -1,0 +1,7 @@
+<% f.object.fields.each do |key,value| %>
+    <% css = value.required? ? :required : '' %>
+    <p>
+      <%= label_tag uda_field_name(f,key), key, :class => css %>
+      <%= text_field_tag uda_field_name(f,key), value.to_s, :id => uda_field_id(f,key) %>
+    </p>
+<% end %>

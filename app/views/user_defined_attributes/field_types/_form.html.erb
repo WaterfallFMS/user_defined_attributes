@@ -1,0 +1,13 @@
+<%= form_for @field_type do |f| %>
+    <div>
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+    </div>
+
+    <div>
+      <%= f.label :model_type %>
+      <%= f.text_field :model_type %>
+    </div>
+
+    <%= f.submit %>
+<% end %>

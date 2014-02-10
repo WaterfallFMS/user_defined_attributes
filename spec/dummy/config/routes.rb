@@ -1,3 +1,7 @@
 Dummy::Application.routes.draw do
-  mount UserDefinedAttributes::Engine, at: "blorgh"
+  mount UserDefinedAttributes::Engine, at: 'user_defined_attributes'
+
+  resources :leads
+
+  root to: 'root#index'
 end

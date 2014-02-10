@@ -10,7 +10,7 @@ require 'webmock/rspec'
 #require 'pundit/rspec'
 #require 'user_defined_attributes'
 
-Dir[File.expand_path('../support/**/*.rb', __FILE__)].each { |file| p file; require file }
+Dir[File.expand_path('../support/**/*.rb', __FILE__)].each { |file| require file }
 
 module Features
   # Extend this module in spec/support/features/*.rb

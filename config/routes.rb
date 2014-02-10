@@ -1,2 +1,3 @@
-Rails.application.routes.draw do
+UserDefinedAttributes::Engine.routes.draw do
+  resources :field_types, except: :show
 end

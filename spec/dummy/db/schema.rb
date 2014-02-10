@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140129200531) do
+ActiveRecord::Schema.define(version: 20140206142418) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20140129200531) do
     t.string   "data_type",                  null: false
     t.boolean  "required",   default: false, null: false
     t.boolean  "public",     default: false, null: false
+    t.boolean  "hidden",     default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -47,5 +48,11 @@ ActiveRecord::Schema.define(version: 20140129200531) do
 
   add_index "user_defined_attributes_fields", ["field_type_id", "model_type", "tenant_id"], name: "udaf_unique", unique: true, using: :btree
   add_index "user_defined_attributes_fields", ["model_type", "model_id", "tenant_id"], name: "udaf_model", using: :btree
+
+  create_table "users", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
