@@ -8,6 +8,27 @@
       <%= f.label :model_type %>
       <%= f.text_field :model_type %>
     </div>
+    
+    <div>
+      <%= f.label :data_type %>
+      <%= f.text_field :data_type %>
+    </div>
+    
+    <div>
+        <%= f.check_box :required %>
+        <%= f.label :required %>
+    </div>
+    
+    <div>
+        <%= f.check_box :public %>
+        <%= f.label :public %>
+    </div>
+    
+    
+    <div>
+        <%= f.check_box :hidden %>
+        <%= f.label :hidden %>
+    </div>
 
     <%= f.submit %>
 <% end %>
