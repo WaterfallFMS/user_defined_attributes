@@ -2,14 +2,14 @@ require 'spec_helper'
 
 feature 'Fields' do
   before do
-    @udat = create :user_defined_field_type, hidden: false
+    @udat = create :user_defined_field_type, name: 'Uda', hidden: false
   end
 
   scenario 'can be edited on the object' do
     visit '/'
     click_link 'Leads'
     click_link 'Create new lead'
-
+    
     fill_in 'Name', with: 'My lead'
     fill_in @udat.name, with: 'My value'
     click_button 'Create Lead'

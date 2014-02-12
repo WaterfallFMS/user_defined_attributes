@@ -1,0 +1,37 @@
+<%= form_for @field_type do |f| %>
+    <div>
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+    </div>
+
+    <div>
+      <%= f.label :model_type %>
+      <%= f.select :model_type, UserDefinedAttributes::Config.models_display %>
+    </div>
+    
+    <div>
+      <%= f.label :data_type %>
+      <%= f.select :data_type, options_for_select(
+          UserDefinedAttributes::Config.data_types,
+          UserDefinedAttributes::Config.default_data_type
+      ) %>
+    </div>
+    
+    <div>
+        <%= f.check_box :required %>
+        <%= f.label :required %>
+    </div>
+    
+    <div>
+        <%= f.check_box :public %>
+        <%= f.label :public %>
+    </div>
+    
+    
+    <div>
+        <%= f.check_box :hidden %>
+        <%= f.label :hidden %>
+    </div>
+
+    <%= f.submit %>
+<% end %>
