@@ -7,7 +7,7 @@ FactoryGirl.define do
   end
 
   factory :user_defined_field, class: UserDefinedAttributes::Field do
-    association :field_type
+    association :field_type, factory: :user_defined_field_type
 
     sequence(:value) {|n| "#{field_type.name} value #{n}"}
 

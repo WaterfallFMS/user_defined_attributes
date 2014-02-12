@@ -9,5 +9,14 @@ module UserDefinedAttributes
     validates :data_type,  presence: true, inclusion: {in: Config.data_types.collect{|type| type.to_s}}
 
     scope :sorted, lambda { order(:model_type).order('lower(name)') }
+    
+    
+    def string?
+      data_type.to_s == 'string'
+    end
+    
+    def text?
+      data_type.to_s == 'text'
+    end
   end
 end
