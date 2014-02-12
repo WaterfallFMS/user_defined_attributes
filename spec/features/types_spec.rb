@@ -7,9 +7,9 @@ feature 'UDA type' do
     click_link 'Create new type'
 
     fill_in 'Name', with: 'Test'
-    fill_in 'Model type', with: 'Lead'
+    select 'Lead', from: 'Model type'
     click_button 'Create Field type'
-
+    
     expect(page).to have_content 'Test'
 
     click_link 'Edit'

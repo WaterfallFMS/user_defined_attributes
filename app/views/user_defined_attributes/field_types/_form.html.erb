@@ -6,12 +6,15 @@
 
     <div>
       <%= f.label :model_type %>
-      <%= f.text_field :model_type %>
+      <%= f.select :model_type, UserDefinedAttributes::Config.models_display %>
     </div>
     
     <div>
       <%= f.label :data_type %>
-      <%= f.text_field :data_type %>
+      <%= f.select :data_type, options_for_select(
+          UserDefinedAttributes::Config.data_types,
+          UserDefinedAttributes::Config.default_data_type
+      ) %>
     </div>
     
     <div>
