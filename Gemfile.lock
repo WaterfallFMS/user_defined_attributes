@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     user_defined_attributes (0.0.1)
-      rails (~> 4.0.0)
+      rails
 
 GEM
   remote: https://rubygems.org/
