@@ -29,7 +29,7 @@ module UserDefinedAttributes
       
       def init!
         @defaults = {
-          :@model_hash        => [],
+          :@models            => [],
           :@data_types        => [:string, :text],
           :@default_data_type => :string,
           :@form_builder      => :action_view

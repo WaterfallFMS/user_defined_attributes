@@ -1,8 +1,8 @@
 <%= simple_form_for @field_type do |f| %>
   <div class="inputs">
     <%= f.input :name %>
-    <%= f.input :model_type, collection: UserDefinedAttributes::Config.models_display %>
-    <%= f.input :data_type, collection: UserDefinedAttributes::Config.data_types %>
+    <%= f.input :model_type, collection: UserDefinedAttributes::Config.models_display, include_blank: false %>
+    <%= f.input :data_type, collection: UserDefinedAttributes::Config.data_types, include_blank: false %>
     <%= f.input :required %>
     <%= f.input :public %>
     <%= f.input :hidden %>
