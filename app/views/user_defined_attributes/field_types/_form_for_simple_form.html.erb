@@ -1,4 +1,4 @@
-<%= simple_form_for @field_type do |f| %>
+<%= simple_form_for [:user_defined_attributes,@user_defined_attributes_field_type] do |f| %>
   <div class="inputs">
     <%= f.input :name %>
     <%= f.input :model_type, collection: UserDefinedAttributes::Config.models_display, include_blank: false %>

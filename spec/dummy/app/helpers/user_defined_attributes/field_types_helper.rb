@@ -1,0 +1,2 @@
+module UserDefinedAttributes::FieldTypesHelper
+end

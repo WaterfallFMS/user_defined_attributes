@@ -10,8 +10,11 @@ module UserDefinedAttributes
     
     class_option :skip_migrations, :optional => true, :type => :boolean,
                  :desc => 'Skip copying of the migration files'
+    class_option :skip_initializer, :optional => true, :type => :boolean,
+                 :desc => 'Skip copying of the initializer'
+    class_option :skip_controller, :optional => true, :type => :boolean,
+                 :desc => 'Skip generating the controller'
 
-    desc 'Generates migrations.'
     def create_migration_file
       return if options[:skip_migrations]
       
@@ -19,9 +22,23 @@ module UserDefinedAttributes
       migration_template 'create_user_defined_attributes_field_types.rb', 'db/migrate/create_user_defined_attributes_field_types.rb'
     end
     
-    desc 'Generate initializer'
     def create_initializer
+      return if options[:skip_initializer]
+      
       template 'initializer.rb', 'config/initializers/user_defined_attributes.rb'
+    end
+    
+    def create_controller
+      return if options[:skip_controller]
+      
+      generate 'scaffold_controller', 'UserDefinedAttributes::FieldType'
+      copy_file 'field_types_controller.rb', 'app/controllers/user_defined_attributes/field_types_controller.rb', force: true
+      copy_file 'field_types_form.erb', 'app/views/user_defined_attributes/field_types/_form.html.erb', force: true
+      inject_into_file 'config/routes.rb', """
+  namespace :user_defined_attributes do
+    resources :field_types, except: :show
+  end
+""", :after => 'routes.draw do'
     end
     
     private
