@@ -110,7 +110,10 @@ module UserDefinedAttributes
         field = Field.new field_type: type, value: fields[type.name].to_s
         unless field.valid?
           field.errors.each do |attrib,error|
-            self.errors.add(type.name, error)
+            # simulate an nested attribute error
+            attribute = "fields.#{type.name}"
+            self.errors[attribute] << error
+            self.errors[attribute].uniq!
           end
         end
       end

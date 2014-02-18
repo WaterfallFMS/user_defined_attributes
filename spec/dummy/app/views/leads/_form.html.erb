@@ -1,5 +1,9 @@
 <%= simple_form_for @lead do |f| %>
     <div>
+        <%= f.error_notification %>
+    </div>
+
+    <div>
         <%= f.input :name %>
         <%= render_uda_in_form f %>
     </div>
