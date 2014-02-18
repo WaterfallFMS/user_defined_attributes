@@ -24,7 +24,7 @@ module UserDefinedAttributes
       end
 
       def to_s
-        @value
+        @value.to_s
       end
       def inspect
         %Q(<#{self.class.name} @name="#{name}" @type="#{type}" @value="#{value}" @require="#{required?}" @public="#{public?}" @hidden="#{hidden?}">)
@@ -72,7 +72,7 @@ module UserDefinedAttributes
       return @fields unless @fields.blank?
 
       ids    = {}
-      fields = {}
+      fields = FieldHash.new
       field_types.each do |type|
         fields[type.name] = Attribute.new type
         ids[type.id]      = type.name
@@ -84,9 +84,9 @@ module UserDefinedAttributes
     end
 
     def public_fields
-      return {} if fields.blank?
+      return FieldHash.new if fields.blank?
 
-      fields.inject({}) do |hash,item|
+      fields.inject(FieldHash.new) do |hash,item|
         key, value = item
         hash[liquidize(key)] = value.to_s if value.public?
         hash
@@ -99,7 +99,7 @@ module UserDefinedAttributes
       @fields_dirty = true
 
       # we need to remain a hash of Attribute
-      @fields = {}
+      @fields = FieldHash.new
       field_types.each do |type|
         @fields[type.name] = Attribute.new type, args[type.name]
       end

@@ -1,4 +1,4 @@
-<%= f.simple_fields_for :fields do |ff| %>
+<%= f.simple_fields_for :fields, OpenStruct.new(f.object.fields) do |ff| %>
     <% f.object.fields.each do |key,value| %>
         <%= ff.input key, required: value.required?, as: value.type %>
     <% end %>

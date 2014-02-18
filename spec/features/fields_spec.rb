@@ -16,8 +16,10 @@ feature 'Fields' do
 
     expect(page).to have_content @udat.name
     expect(page).to have_content 'My value'
-
+    
     click_link 'Edit'
+    expect(find_field(@udat.name).value).to eq 'My value'
+
     fill_in @udat.name, with: 'New value'
     click_button 'Update Lead'
 
