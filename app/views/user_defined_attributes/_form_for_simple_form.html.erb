@@ -1,5 +1,5 @@
 <%= f.simple_fields_for :fields do |ff| %>
     <% f.object.fields.each do |key,value| %>
-        <%= ff.input key, required: value.required? %>
+        <%= ff.input key, required: value.required?, as: value.type %>
     <% end %>
 <% end %>

@@ -9,16 +9,18 @@ module UserDefinedAttributes
     end
 
     class Attribute
-      attr_reader   :type, :name
+      attr_reader   :type, :name, :uda, :model_type
       attr_accessor :value
 
       def initialize(uda,value=nil)
-        @name      = uda.name
-        @type      = uda.data_type
-        @required  = uda.required?
-        @public    = uda.public?
-        @hidden    = uda.hidden?
-        self.value = value
+        @uda        = uda
+        @model_type = uda.model_type
+        @name       = uda.name
+        @type       = uda.data_type
+        @required   = uda.required?
+        @public     = uda.public?
+        @hidden     = uda.hidden?
+        self.value  = value
       end
 
       def to_s
@@ -105,7 +107,12 @@ module UserDefinedAttributes
 
     def check_fields
       field_types.each do |type|
-        self.errors.add_on_blank(type.name) if type.required?
+        field = Field.new field_type: type, value: fields[type.name].to_s
+        unless field.valid?
+          field.errors.each do |attrib,error|
+            self.errors.add(type.name, error)
+          end
+        end
       end
     end
 
@@ -123,7 +130,7 @@ module UserDefinedAttributes
       field_types.each do |type|
         value = @fields[type.name]
         next if value.blank?
-
+        
         UserDefinedAttributes::Field.create :field_type => type, :model => self, :value => value.to_s
       end
     end

@@ -123,6 +123,17 @@ describe 'UDA model' do
       expect(new_subject.valid?).to be_false
       expect(new_subject.errors[udat.name]).to include "can't be blank"
     end
+    
+    it 'should ensure that if a set field fails to save the validation is recorded' do
+      udat.required = false
+      udat.data_type = 'string' # force a length validation
+      udat.save
+      new_subject = Lead.find(subject)
+      new_subject.fields = {udat.name => '-'*256}
+      
+      expect(new_subject.valid?).to be_false
+      expect(new_subject.errors[udat.name]).to include 'is too long (maximum is 255 characters)'
+    end
   end
 
   context 'after save' do
