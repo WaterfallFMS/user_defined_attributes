@@ -31,14 +31,16 @@ module UserDefinedAttributes
     def create_controller
       return if options[:skip_controller]
       
-      generate 'scaffold_controller', 'UserDefinedAttributes::FieldType'
-      copy_file 'field_types_controller.rb', 'app/controllers/user_defined_attributes/field_types_controller.rb', force: true
-      copy_file 'field_types_form.erb', 'app/views/user_defined_attributes/field_types/_form.html.erb', force: true
-      inject_into_file 'config/routes.rb', """
+      route = <<EOF
   namespace :user_defined_attributes do
     resources :field_types, except: :show
   end
-""", :after => 'routes.draw do'
+EOF
+      
+      generate 'scaffold_controller', 'UserDefinedAttributes::FieldType'
+      copy_file 'field_types_controller.rb', 'app/controllers/user_defined_attributes/field_types_controller.rb', force: true
+      copy_file 'field_types_form.erb', 'app/views/user_defined_attributes/field_types/_form.html.erb', force: true
+      inject_into_file 'config/routes.rb', route, :after => 'routes.draw do'
     end
     
     private
