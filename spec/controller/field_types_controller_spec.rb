@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe UserDefinedAttributes::FieldTypesController, type: :controller do
-  #routes { UserDefinedAttributes::Engine.routes }
-
   controller do
     attr_accessor :auth_object, :auth_action
 
