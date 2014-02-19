@@ -17,6 +17,22 @@ Then install the migrations
 
 ## Usage
 
+First, adjust the initializer.
+
+```ruby
+# config/initializers/user_defined_attributes.rb
+Rails.application.config.user_defined_attributes.configure do |config|
+  # Array of models that have UDA mixed in
+  config.models = %w(Lead)
+  
+  # which formbuilder is used
+  config.form_builder = :simple_form
+  
+  # Uncomment to limit the type of data allowed
+  # config.data_types = [:string, :text]
+end
+```
+
 To use UDA, first you need to mix-in UDA into a model
 
 ```ruby
@@ -26,12 +42,14 @@ class User < ActiveRecord::Base
 end
 ```
 
-Then you need to mount the UDA routes
+Then you need to create the UDA routes
 
 ```ruby
 # routes.rb
-Dummy::Application.routes.draw do
-  mount UserDefinedAttributes::Engine, at: "uda"
+resources :tenants do
+  namespace :user_defined_attributes do
+    resources :field_types, except: :show
+  end
 end
 ```
 
@@ -40,6 +58,11 @@ Then you need to make the UDA helpers accessible to your views
 ```ruby
 # users_controller.rb
 class UsersController < ActionController::Base
+  helper 'user_defined_attributes/uda'
+end
+
+# or
+class ApplicationController
   helper 'user_defined_attributes/uda'
 end
 ```
@@ -68,7 +91,7 @@ Finally you need to provide the path to the UDA types controller so that UDA typ
 
 ```erb
 <!-- settings/index.html.erb -->
-<%= link_to 'Manage User Defined Types', uda.field_types_path %>
+<%= link_to 'Manage User Defined Types', tenant_user_defined_attributes_field_types_path(current_tenant) %>
 ```
 
 ## Strong parameters
@@ -161,7 +184,7 @@ The controllers and views will send messages to enforce permissions.
 
 Controllers will send:
 
-1. `policy_scope(class)` - returns an finder class objects that are scoped to the user.
+1. `policy_scope(class)` - returns an finder class object that are scoped to the user.
 1. `authorize(object,action=nil)` - expected to raise an error if the action is not allowed on the object.  The authorize object should pull the action from the param if not provided.
 
 ```ruby
