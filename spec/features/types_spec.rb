@@ -4,10 +4,10 @@ feature 'UDA type' do
   scenario 'can be edited in app' do
     visit '/'
     click_link 'UDA'
-    click_link 'Create new type'
+    click_link 'New Field type'
 
     fill_in 'Name', with: 'Test'
-    fill_in 'Model type', with: 'Lead'
+    select 'Lead', from: 'Model type'
     click_button 'Create Field type'
 
     expect(page).to have_content 'Test'
@@ -19,7 +19,7 @@ feature 'UDA type' do
     expect(page).to have_content 'New UDA'
     expect(page).not_to have_content 'Test'
 
-    click_link 'Delete'
+    click_link 'Destroy'
     expect(page).not_to have_content 'New UDA'
   end
 end

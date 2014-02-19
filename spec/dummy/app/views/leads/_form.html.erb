@@ -1,11 +1,11 @@
-<%= form_for @lead do |f| %>
+<%= simple_form_for @lead do |f| %>
     <div>
-      <%= f.label :name %>
-      <%= f.text_field :name %>
+        <%= f.error_notification %>
     </div>
 
     <div>
-      <%= render_uda_in_form f %>
+        <%= f.input :name %>
+        <%= render_uda_in_form f %>
     </div>
 
     <%= f.submit %>

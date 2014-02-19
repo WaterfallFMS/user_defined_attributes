@@ -1,0 +1,14 @@
+<%= simple_form_for [:user_defined_attributes,@user_defined_attributes_field_type] do |f| %>
+  <div class="inputs">
+    <%= f.input :name %>
+    <%= f.input :model_type, collection: UserDefinedAttributes::Config.models_display, include_blank: false %>
+    <%= f.input :data_type, collection: UserDefinedAttributes::Config.data_types, include_blank: false %>
+    <%= f.input :required %>
+    <%= f.input :public %>
+    <%= f.input :hidden %>
+  </div>
+
+  <div class='button'>
+    <%= f.submit %>
+  </div>
+<% end %>

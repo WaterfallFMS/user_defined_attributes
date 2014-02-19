@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe UserDefinedAttributes::FieldTypesController, type: :controller do
-  routes { UserDefinedAttributes::Engine.routes }
-
   controller do
     attr_accessor :auth_object, :auth_action
 
@@ -26,7 +24,7 @@ describe UserDefinedAttributes::FieldTypesController, type: :controller do
       objects.push create(:user_defined_field_type, name: '1')
 
       get :index
-      local = assigns(:field_types)
+      local = assigns(:user_defined_attributes_field_types)
       expect(local).to eq objects.reverse
     end
 
@@ -34,7 +32,7 @@ describe UserDefinedAttributes::FieldTypesController, type: :controller do
       create_list :user_defined_field_type, 6
 
       get :index
-      local = assigns(:field_types)
+      local = assigns(:user_defined_attributes_field_types)
       expect(local.size).to eq 4
       expect(local).to be_an ActiveRecord::Relation
     end

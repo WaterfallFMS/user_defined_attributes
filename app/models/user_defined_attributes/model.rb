@@ -9,20 +9,22 @@ module UserDefinedAttributes
     end
 
     class Attribute
-      attr_reader   :type, :name
+      attr_reader   :type, :name, :uda, :model_type
       attr_accessor :value
 
       def initialize(uda,value=nil)
-        @name      = uda.name
-        @type      = uda.data_type
-        @required  = uda.required?
-        @public    = uda.public?
-        @hidden    = uda.hidden?
-        self.value = value
+        @uda        = uda
+        @model_type = uda.model_type
+        @name       = uda.name
+        @type       = uda.data_type
+        @required   = uda.required?
+        @public     = uda.public?
+        @hidden     = uda.hidden?
+        self.value  = value
       end
 
       def to_s
-        @value
+        @value.to_s
       end
       def inspect
         %Q(<#{self.class.name} @name="#{name}" @type="#{type}" @value="#{value}" @require="#{required?}" @public="#{public?}" @hidden="#{hidden?}">)
@@ -70,7 +72,7 @@ module UserDefinedAttributes
       return @fields unless @fields.blank?
 
       ids    = {}
-      fields = {}
+      fields = FieldHash.new
       field_types.each do |type|
         fields[type.name] = Attribute.new type
         ids[type.id]      = type.name
@@ -82,9 +84,9 @@ module UserDefinedAttributes
     end
 
     def public_fields
-      return {} if fields.blank?
+      return FieldHash.new if fields.blank?
 
-      fields.inject({}) do |hash,item|
+      fields.inject(FieldHash.new) do |hash,item|
         key, value = item
         hash[liquidize(key)] = value.to_s if value.public?
         hash
@@ -97,7 +99,7 @@ module UserDefinedAttributes
       @fields_dirty = true
 
       # we need to remain a hash of Attribute
-      @fields = {}
+      @fields = FieldHash.new
       field_types.each do |type|
         @fields[type.name] = Attribute.new type, args[type.name]
       end
@@ -105,7 +107,15 @@ module UserDefinedAttributes
 
     def check_fields
       field_types.each do |type|
-        self.errors.add_on_blank(type.name) if type.required?
+        field = Field.new field_type: type, value: fields[type.name].to_s
+        unless field.valid?
+          field.errors.each do |attrib,error|
+            # simulate an nested attribute error
+            attribute = "fields.#{type.name}"
+            self.errors[attribute] << error
+            self.errors[attribute].uniq!
+          end
+        end
       end
     end
 
@@ -123,7 +133,7 @@ module UserDefinedAttributes
       field_types.each do |type|
         value = @fields[type.name]
         next if value.blank?
-
+        
         UserDefinedAttributes::Field.create :field_type => type, :model => self, :value => value.to_s
       end
     end

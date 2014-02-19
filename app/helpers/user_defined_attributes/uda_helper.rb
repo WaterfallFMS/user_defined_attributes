@@ -8,8 +8,10 @@ module UserDefinedAttributes
       %Q(#{f.object_name}_fields_#{key})
     end
 
-    def render_uda_in_form(form)
-      render partial: 'user_defined_attributes/form', locals: {f: form}
+    def render_uda_in_form(form, build_type = nil)
+      build_type ||= UserDefinedAttributes::Config.form_builder
+      
+      render partial: "user_defined_attributes/form_for_#{build_type.to_s}", locals: {f: form}
     end
 
     def render_uda_fields_for(object)

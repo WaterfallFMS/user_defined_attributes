@@ -1,5 +1,7 @@
 Dummy::Application.routes.draw do
-  mount UserDefinedAttributes::Engine, at: 'user_defined_attributes'
+  namespace :user_defined_attributes do
+    resources :field_types, except: :show
+  end
 
   resources :leads
 
