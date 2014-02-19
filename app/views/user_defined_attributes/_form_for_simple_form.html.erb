@@ -1,6 +1,5 @@
 <%= f.simple_fields_for :fields, UserDefinedAttributes::NestedFormFields.new(f.object) do |ff| %>
     <% f.object.fields.each do |key,value| %>
         <%= ff.input key, required: value.required?, as: value.type %>
-        <%= ff.full_error key %>
     <% end %>
 <% end %>
