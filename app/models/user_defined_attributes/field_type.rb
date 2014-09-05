@@ -18,5 +18,10 @@ module UserDefinedAttributes
     def text?
       data_type.to_s == 'text'
     end
+
+    def serialized?
+      data_type.to_s == 'serialized'
+    end
+
   end
 end
