@@ -84,22 +84,15 @@ module UserDefinedAttributes
     end
 
     def values
-      return OpenStruct.new if fields.blank?
-
-      values = OpenStruct.new
-      fields.each do |hash, item|
-        key, value = item
-        values.send(liquidize(key)) = value.to_s
-      end
-      values
+      OpenStruct.new(public_fields(true))
     end
 
-    def public_fields
+    def public_fields(all = false)
       return FieldHash.new if fields.blank?
 
       fields.inject(FieldHash.new) do |hash,item|
         key, value = item
-        hash[liquidize(key)] = value.to_s if value.public?
+        hash[liquidize(key)] = value.to_s if value.public? || all
         hash
       end
     end
