@@ -2,7 +2,7 @@ module UserDefinedAttributes
   class FieldType < ActiveRecord::Base
     has_many :fields, :dependent => :destroy
 
-    default_scope { where(tenant_id: Tenant.current_tenant.id) }
+    #default_scope { where(tenant_id: Tenant.current_tenant.id) }
     
     validates :name,       presence: true, uniqueness: {scope: [:tenant_id, :model_type]}
     validates :model_type, presence: true, inclusion: {in: Config.models}
