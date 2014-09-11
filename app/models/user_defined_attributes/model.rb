@@ -77,7 +77,7 @@ module UserDefinedAttributes
         fields[type.name] = Attribute.new type
         ids[type.id]      = type.name
       end
-      user_defined_fields.each do |field|
+      user_defined_fields.reload.each do |field|
         fields[ids[field.field_type_id]].value = field.value
       end
       @fields=fields
