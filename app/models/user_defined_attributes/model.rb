@@ -69,7 +69,7 @@ module UserDefinedAttributes
     end
 
     def fields
-      return @fields unless @fields.blank?
+      #return @fields unless @fields.blank?
 
       ids    = {}
       fields = FieldHash.new
