@@ -69,18 +69,12 @@ module UserDefinedAttributes
     end
 
     def fields
-      #return @fields unless @fields.blank?
+      return @fields unless @fields.blank?
+      set_fields_data
+    end
 
-      ids    = {}
-      fields = FieldHash.new
-      field_types.each do |type|
-        fields[type.name] = Attribute.new type
-        ids[type.id]      = type.name
-      end
-      user_defined_fields.reload.each do |field|
-        fields[ids[field.field_type_id]].value = field.value
-      end
-      @fields=fields
+    def fields_data
+      set_fields_data
     end
 
     def values
@@ -129,6 +123,19 @@ module UserDefinedAttributes
     end
 
     private
+    def set_fields_data
+      ids    = {}
+      fields = FieldHash.new
+      field_types.each do |type|
+        fields[type.name] = Attribute.new type
+        ids[type.id]      = type.name
+      end
+      user_defined_fields.reload.each do |field|
+        fields[ids[field.field_type_id]].value = field.value
+      end
+      @fields=fields
+    end
+
     def set_user_defined_fields
       return unless @fields_dirty
       return unless @fields

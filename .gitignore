@@ -8,5 +8,5 @@ spec/dummy/tmp/
 spec/dummy/.sass-cache
 
 /.idea/
-
+.rvmrc
 /coverage/
