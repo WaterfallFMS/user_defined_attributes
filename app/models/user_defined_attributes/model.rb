@@ -4,7 +4,7 @@ module UserDefinedAttributes
 
     included do
       has_many :user_defined_fields, :as => :model, :dependent => :destroy, :class_name => 'UserDefinedAttributes::Field'
-      after_save      :set_user_defined_fields
+      #after_save      :set_user_defined_fields
       before_validation :check_fields
     end
 
