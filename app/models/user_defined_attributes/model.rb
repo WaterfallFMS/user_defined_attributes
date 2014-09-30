@@ -10,7 +10,7 @@ module UserDefinedAttributes
 
     class Attribute
       attr_reader   :type, :name, :uda, :model_type
-      attr_accessor :value
+      attr_accessor :value, :field_id
 
       def initialize(uda,value=nil)
         @uda        = uda
@@ -27,7 +27,7 @@ module UserDefinedAttributes
         @value.to_s
       end
       def inspect
-        %Q(<#{self.class.name} @name="#{name}" @type="#{type}" @value="#{value}" @require="#{required?}" @public="#{public?}" @hidden="#{hidden?}">)
+        %Q(<#{self.class.name} @field_id="#{field_id}" @name="#{name}" @type="#{type}" @value="#{value}" @require="#{required?}" @public="#{public?}" @hidden="#{hidden?}">)
       end
 
       def required?
@@ -57,6 +57,10 @@ module UserDefinedAttributes
         UserDefinedAttributes::FieldType.where(:model_type => self)
       end
 
+      def tenant_field_types(tenant_id)
+        UserDefinedAttributes::FieldType.where(:model_type => self, :tenant_id => tenant_id)
+      end
+
       def uda_strong_params
         {
             fields: field_types.collect {|type| type.name }
@@ -66,6 +70,10 @@ module UserDefinedAttributes
 
     def field_types
       self.class.field_types
+    end
+
+    def tenant_field_types(tenant_id)
+      self.class.tenant_field_types(tenant_id)
     end
 
     def fields
@@ -131,7 +139,9 @@ module UserDefinedAttributes
         ids[type.id]      = type.name
       end
       user_defined_fields.reload.each do |field|
-        fields[ids[field.field_type_id]].value = field.value
+        field_name = ids[field.field_type_id]
+        fields[field_name].value = field.value
+        fields[field_name].field_id = field.id
       end
       @fields=fields
     end

@@ -7,7 +7,7 @@ module UserDefinedAttributes
     
     delegate :required?, :string?, :text?, to: :field_type
 
-   serialize :value, OpenStruct
+    serialize :value, OpenStruct
     
     validates :value, presence: true, if: :required?
     validates :value, length: {maximum: 255}, allow_blank: true, if: :string?
